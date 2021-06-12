@@ -71,7 +71,7 @@ router.get('/search', async function (req, res, next) {
     switch (filter) {
         case 'all': filter_name = '전체';
             var count = await Lecture.countDocuments({ $or: [{ name: { $regex: searching } }, { prefessor: { $regex: searching } }, { lec_num: { $regex: searching } }, { major: { $regex: searching } }, { concentration: { $regex: searching } }] })
-            total_length = Math.ceil(count / 10)
+            total_length = Math.ceil(count / 10);
             //     , function (err, count) {
             //     if (err) console.error(err);
             //     total_length = Math.ceil(count / 10)
@@ -90,12 +90,16 @@ router.get('/search', async function (req, res, next) {
                         else prefessor[i] = lectures[i].prefessor;
                     }
 
-                    res.render('search', { filter: filter, filter_name: filter_name, searching: req.query.searching, lectures: lectures, prefessor: prefessor, page: page+1, total_length: total_length });
+                    res.render('search', { filter: filter, filter_name: filter_name, searching: req.query.searching, lectures: lectures, prefessor: prefessor, page: page + 1, total_length: total_length });
                 });
             break;
 
         case 'name': filter_name = '강의 제목'
-            Lecture.find({ name: { $regex: searching } }, function (err, lectures) {
+            var count = await Lecture.countDocuments({ name: { $regex: searching } })
+            total_length = Math.ceil(count / 10);
+
+            Lecture.find({ name: { $regex: searching } })
+            .skip(skip).limit(limit).exec(function (err, lectures) {
                 if (err) console.error(err);
 
                 var prefessor = []
@@ -105,12 +109,15 @@ router.get('/search', async function (req, res, next) {
                     else prefessor[i] = lectures[i].prefessor;
                 }
 
-                res.render('search', { filter: filter_name, searching: req.query.searching, lectures: lectures, prefessor: prefessor, page });
+                res.render('search', { filter: filter, filter_name: filter_name, searching: req.query.searching, lectures: lectures, prefessor: prefessor, page: page + 1, total_length: total_length });
             });
             break;
 
         case 'professor': filter_name = '교수명'
-            Lecture.find({ prefessor: { $regex: searching } }, function (err, lectures) {//오타났음
+            var count = await Lecture.countDocuments({ prefessor: { $regex: searching } })
+            total_length = Math.ceil(count / 10);
+
+            Lecture.find({ prefessor: { $regex: searching } }).skip(skip).limit(limit).exec(function (err, lectures) {//오타났음
                 if (err) console.error(err);
 
                 var prefessor = []
@@ -120,12 +127,15 @@ router.get('/search', async function (req, res, next) {
                     else prefessor[i] = lectures[i].prefessor;
                 }
 
-                res.render('search', { filter: filter_name, searching: req.query.searching, lectures: lectures, prefessor: prefessor, page });
+                res.render('search', { filter: filter, filter_name: filter_name, searching: req.query.searching, lectures: lectures, prefessor: prefessor, page: page + 1, total_length: total_length });
             });
             break;
 
         case 'lec_num': filter_name = '과목코드'
-            Lecture.find({ lec_num: { $regex: searching } }, function (err, lectures) {
+            var count = await Lecture.countDocuments({ lec_num: { $regex: searching } })
+            total_length = Math.ceil(count / 10);
+
+            Lecture.find({ lec_num: { $regex: searching } }).skip(skip).limit(limit).exec(function (err, lectures) {
                 if (err) console.error(err);
 
                 var prefessor = []
@@ -135,12 +145,15 @@ router.get('/search', async function (req, res, next) {
                     else prefessor[i] = lectures[i].prefessor;
                 }
 
-                res.render('search', { filter: filter_name, searching: req.query.searching, lectures: lectures, prefessor: prefessor, page });
+                res.render('search', { filter: filter, filter_name: filter_name, searching: req.query.searching, lectures: lectures, prefessor: prefessor, page: page + 1, total_length: total_length });
             });
             break;
 
         case 'major': filter_name = '전공'
-            Lecture.find({ $or: [{ major: { $regex: searching } }, { concentration: { $regex: searching } }] }, function (err, lectures) {
+            var count = await Lecture.countDocuments({ $or: [{ major: { $regex: searching } }, { concentration: { $regex: searching } }] })
+            total_length = Math.ceil(count / 10);
+
+            Lecture.find({ $or: [{ major: { $regex: searching } }, { concentration: { $regex: searching } }] }).skip(skip).limit(limit).exec(function (err, lectures) {
                 if (err) console.error(err);
 
                 var prefessor = []
@@ -150,7 +163,7 @@ router.get('/search', async function (req, res, next) {
                     else prefessor[i] = lectures[i].prefessor;
                 }
 
-                res.render('search', { filter: filter_name, searching: req.query.searching, lectures: lectures, prefessor: prefessor, page });
+                res.render('search', { filter: filter, filter_name: filter_name, searching: req.query.searching, lectures: lectures, prefessor: prefessor, page: page + 1, total_length: total_length });
             });
             break;
     }
