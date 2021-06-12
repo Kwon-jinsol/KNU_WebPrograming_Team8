@@ -371,6 +371,12 @@ div.footer {
     min-width: 1350px;
 }
 
+a.search_list_text{
+    color: black;
+    /* text-shadow: 1px 1px 2px rgb(240, 212, 212); */
+    font-weight: 900;
+}
+
 div.search_list_text{
     margin:0px;
     width:330px;
@@ -426,7 +432,7 @@ span.howmuch{
 .category{
     color:white;
     font-size: 17px;
-    margin-top: 50px;
+    margin-top: 40px;
 }
 
 .category2{

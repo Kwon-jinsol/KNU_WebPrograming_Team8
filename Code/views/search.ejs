@@ -55,57 +55,80 @@
             </div>
             <ul class="pagination justify-content-center">
                 <% if (!page) page=1 %> 
-                <% if ( page <= 10 ){ %> 
-                    <% if ( total_length >= 10 ) { %> 
-                        <li class="page-item disabled">
-                            <a class="page-link" href="?filter=<%= filter %>&searching=<%= searching %>&page=<%= i-1 %>"> < </a>
-                        </li>
-                        <% for(let i=1; i <= 10 ; i++){ %> 
-                            <% if (i == page) { %>
-                                <li class="page-item active">
-                                    <a class="page-link " href="?filter=<%= filter %>&searching=<%= searching %>&page=<%= i %>"><%= i %></a>
-                                </li>
-                            <% } else { %> 
-                                <li class="page-item">
-                                    <a class="page-link" href="?filter=<%= filter %>&searching=<%= searching %>&page=<%= i %>"><%= i %></a>
-                                </li>
-                            <% } %> 
-                        <% } %>
-                        <li class="page-item">
-                            <a class="page-link" href="?filter=<%= filter %>&searching=<%= searching %>&page=<%= 11 %>"> > </a>
-                        </li>
-                    <% } else { %>
-                        <% for(let i=1; i <= total_length ; i++){ %> 
-                            <% if (i == page) { %>
-                                <li class="page-item active">
-                                    <a class="page-link " href="?filter=<%= filter %>&searching=<%= searching %>&page=<%= i %>"><%= i %></a>
-                                </li>
-                            <% } else { %> 
-                                <li class="page-item">
-                                    <a class="page-link" href="?filter=<%= filter %>&searching=<%= searching %>&page=<%= i %>"><%= i %></a>
-                                </li>
-                            <% } %> 
-                        <% } %>
-                    <% } %>
-                <% } else { %>
+                <!-- 
+                    현재 페이지 == page
+                    전체 페이지 수 == length
+                    temp = 10
+
+                    scale = page / temp 
+                        ==> 자리 수 판단
+                    
+                      * for 문의 시작 포인트 판단 *
+                    start = 1 + 10 * scale
+                      ex] 6 / 10 = 0
+                        ==> 1 + 10 * scale = 1
+                      ex] 24 / 10 = 2
+                        ==> 1 + 10 * scale = 21
+                    
+                    end = 10 + 10 * scale 
+                    if (length <= end)
+                        end = length
+
+                    if (start == 1)
+                        '이전' 버튼 비활성화
+                    else
+                        '이전' 버튼 활성화
+
+                    for (i=start;i<=end;i++){
+                        <a> i </a>
+                    }
+
+                      * 종료 시점 *
+                    if (length == end)
+                        '다음' 버튼 비활성화
+                    else
+                        '다음' 버튼 활성화
+                 -->       
+                <% if (page % 10 == 0) { %>
+                    <% var scale = Math.floor(page / 10) - 1 %> 
+                <% } else { %> 
+                    <% var scale = Math.floor(page / 10); %>
+                <% } %> 
+                <% var start = 1 + 10 * scale %> 
+                <% var end = 10 + 10 * scale %> 
+                <% if (total_length <= end){ %>
+                    <% end = total_length %>
+                <% } %> 
+                <% if (start == 1){ %> 
+                    <li class="page-item disabled">
+                        <a class="page-link" href="?filter=<%= filter %>&searching=<%= searching %>&page=<%= i %>"> < </a>
+                    </li>
+                <% } else { %> 
                     <li class="page-item">
                         <a class="page-link" href="?filter=<%= filter %>&searching=<%= searching %>&page=<%= 1 %>"> < </a>
                     </li>
-                    <% for(let i=11; i <= total_length ; i++){ %> 
-                        <% if (i == page) { %>
-                            <li class="page-item active">
-                                <a class="page-link " href="?filter=<%= filter %>&searching=<%= searching %>&page=<%= i %>"><%= i %></a>
-                            </li>
-                        <% } else { %> 
-                            <li class="page-item">
-                                <a class="page-link" href="?filter=<%= filter %>&searching=<%= searching %>&page=<%= i %>"><%= i %></a>
-                            </li>
-                        <% } %> 
-                    <% } %>
-                    <li class="page-item disabled">
-                        <a class="page-link" href="?filter=<%= filter %>&searching=<%= searching %>&page=<%= 11 %>"> > </a>
-                    </li>
+                <% } %> 
+                <% for (let i = start; i<= end; i++){ %> 
+                    <% if (i == page) { %>
+                        <li class="page-item active">
+                            <a class="page-link " href="?filter=<%= filter %>&searching=<%= searching %>&page=<%= i %>"><%= i %></a>
+                        </li>
+                    <% } else { %> 
+                        <li class="page-item">
+                            <a class="page-link" href="?filter=<%= filter %>&searching=<%= searching %>&page=<%= i %>"><%= i %></a>
+                        </li>
+                    <% } %> 
                 <% } %>
+
+                <% if ( total_length == end){ %> 
+                    <li class="page-item disabled">
+                        <a class="page-link" href="?filter=<%= filter %>&searching=<%= searching %>&page=<%= end %>"> > </a>
+                    </li>
+                <% } else { %> 
+                    <li class="page-item">
+                        <a class="page-link" href="?filter=<%= filter %>&searching=<%= searching %>&page=<%= end+1 %>"> > </a>
+                    </li>
+                <% } %> 
             </ul>
         <%- include('layouts/footer'); -%>
         <%- include('layouts/scripts'); -%>

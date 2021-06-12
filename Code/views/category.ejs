@@ -49,6 +49,49 @@
                     </div>
                 </div>
             </div>
+            <ul class="pagination justify-content-center">
+                <% if (!page) page=1 %>
+                <% if (page % 10 == 0) { %>
+                    <% var scale = Math.floor(page / 10) - 1 %> 
+                <% } else { %> 
+                    <% var scale = Math.floor(page / 10); %>
+                <% } %> 
+                <% var start = 1 + 10 * scale %> 
+                <% var end = 10 + 10 * scale %> 
+                <% if (total_length <= end){ %>
+                    <% end = total_length %>
+                <% } %> 
+                <% if (start == 1){ %> 
+                    <li class="page-item disabled">
+                        <a class="page-link" href="page=<%= i %>"> < </a>
+                    </li>
+                <% } else { %> 
+                    <li class="page-item">
+                        <a class="page-link" href="page=<%= 1 %>"> < </a>
+                    </li>
+                <% } %> 
+                <% for (let i = start; i<= end; i++){ %> 
+                    <% if (i == page) { %>
+                        <li class="page-item active">
+                            <a class="page-link " href="?page=<%= i %>"><%= i %></a>
+                        </li>
+                    <% } else { %> 
+                        <li class="page-item">
+                            <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                        </li>
+                    <% } %> 
+                <% } %>
+
+                <% if ( total_length == end){ %> 
+                    <li class="page-item disabled">
+                        <a class="page-link" href="?page=<%= end %>"> > </a>
+                    </li>
+                <% } else { %> 
+                    <li class="page-item">
+                        <a class="page-link" href="?page=<%= end+1 %>"> > </a>
+                    </li>
+                <% } %> 
+            </ul>
             <%- include('layouts/footer'); -%>
         <%- include('layouts/scripts'); -%>
     </body>

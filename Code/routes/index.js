@@ -99,18 +99,18 @@ router.get('/search', async function (req, res, next) {
             total_length = Math.ceil(count / 10);
 
             Lecture.find({ name: { $regex: searching } })
-            .skip(skip).limit(limit).exec(function (err, lectures) {
-                if (err) console.error(err);
+                .skip(skip).limit(limit).exec(function (err, lectures) {
+                    if (err) console.error(err);
 
-                var prefessor = []
+                    var prefessor = []
 
-                for (var i = 0; i < lectures.length; i++) {
-                    if (lectures[i].prefessor.length > 6) prefessor[i] = 0;
-                    else prefessor[i] = lectures[i].prefessor;
-                }
+                    for (var i = 0; i < lectures.length; i++) {
+                        if (lectures[i].prefessor.length > 6) prefessor[i] = 0;
+                        else prefessor[i] = lectures[i].prefessor;
+                    }
 
-                res.render('search', { filter: filter, filter_name: filter_name, searching: req.query.searching, lectures: lectures, prefessor: prefessor, page: page + 1, total_length: total_length });
-            });
+                    res.render('search', { filter: filter, filter_name: filter_name, searching: req.query.searching, lectures: lectures, prefessor: prefessor, page: page + 1, total_length: total_length });
+                });
             break;
 
         case 'professor': filter_name = '교수명'
@@ -170,8 +170,12 @@ router.get('/search', async function (req, res, next) {
 
 })
 
-router.get('/category/:key', function (req, res, next) {
+router.get('/category/:key', async function (req, res, next) {
     const college = req.params.key;
+    page = req.query.page - 1;
+    skip = page * 10;
+    limit = 10;
+    var total_length;
 
     if (college == "inmun") var d = '인문대학';
     else if (college == "society") var d = '사회과학대학';
@@ -195,7 +199,10 @@ router.get('/category/:key', function (req, res, next) {
     else if (college == "eco") var d = '생태환경대학';
     else if (college == "science") var d = '과학기술대학';
 
-    Lecture.find({ college: d }, function (err, lectures) {
+    var count = await Lecture.countDocuments({ college: d });
+    total_length = Math.ceil(count / 10);
+
+    Lecture.find({ college: d }).skip(skip).limit(limit).exec(function (err, lectures) {
         if (err) console.error(err);
 
         var prefessor = []
@@ -205,14 +212,22 @@ router.get('/category/:key', function (req, res, next) {
             else prefessor[i] = lectures[i].prefessor;
         }
 
-        res.render('category', { lectures: lectures, prefessor: prefessor, d: d });
+        res.render('category', { lectures: lectures, prefessor: prefessor, d: d, total_length: total_length, page: page + 1 });
     });
 })
 
-router.get('/category2/:key', function (req, res, next) {
+router.get('/category2/:key', async function (req, res, next) {
     const key = req.params.key;
+    const college = req.params.key;
+    page = req.query.page - 1;
+    skip = page * 10;
+    limit = 10;
+    var total_length;
 
-    Lecture.find({ lec_cat: key }, function (err, lectures) {
+    var count = await Lecture.countDocuments({ lec_cat: key });
+    total_length = Math.ceil(count / 10);
+
+    Lecture.find({ lec_cat: key }).skip(skip).limit(limit).exec(function (err, lectures) {
         if (err) console.error(err);
 
         var prefessor = []
@@ -222,7 +237,7 @@ router.get('/category2/:key', function (req, res, next) {
             else prefessor[i] = lectures[i].prefessor;
         }
 
-        res.render('category', { lectures: lectures, prefessor: prefessor, d });
+        res.render('category', { lectures: lectures, prefessor: prefessor, d: key, total_length: total_length, page: page + 1 });
     });
 })
 
