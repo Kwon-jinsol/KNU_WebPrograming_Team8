@@ -1,8 +1,7 @@
 # KNU_WebPrograming_Team8
 ## 2021-1 고급웹프로그래밍 8팀
 
-### [수강신청 쇼핑몰]
-  https://shop-at-knu.herokuapp.com/
+### <a href=https://shop-at-knu.herokuapp.com/>[수강신청 쇼핑몰]</a>
 
 - **참여인원**
   - 2016114089 이장훈
