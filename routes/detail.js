@@ -17,7 +17,9 @@ router.get('/', function(req, res, next) {
     Lecture.findOne({lec_num: lec_num}, function(err, lecture){
         if(err) console.error(err);
 
-        // console.log(lecture);
+        var lec_link = lecture.lec_link.replace('http','https')
+        // console.log(lec_link);
+
 
         Comment.find({lecture_id: lecture._id}, function(err, comments){
             if(err) console.error(err);
@@ -32,9 +34,9 @@ router.get('/', function(req, res, next) {
                 average = Math.round((sum/comments.length) *10);
                 average = average/10;
 
-                res.render('detail',{lecture: lecture, comments:comments, logined:logined, average:average, user_id:user_id});
+                res.render('detail',{lecture: lecture, comments:comments, logined:logined, average:average, user_id:user_id, lec_link:lec_link});
             }else{
-                res.render('detail',{lecture: lecture, comments:0, logined:logined, average:0, user_id:user_id});
+                res.render('detail',{lecture: lecture, comments:0, logined:logined, average:0, user_id:user_id, lec_link:lec_link});
             }
         });
     });
