@@ -105,7 +105,7 @@
                     </li>
                 <% } else { %> 
                     <li class="page-item">
-                        <a class="page-link" href="?filter=<%= filter %>&searching=<%= searching %>&page=<%= 1 %>"> < </a>
+                        <a class="page-link" href="?filter=<%= filter %>&searching=<%= searching %>&page=<%= start - 10 %>"> < </a>
                     </li>
                 <% } %> 
                 <% for (let i = start; i<= end; i++){ %> 
